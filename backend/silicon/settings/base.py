@@ -1,6 +1,7 @@
 import os
 import environ
 from pathlib import Path
+from datetime import timedelta
 
 
 env = environ.Env(DEBUG=(bool, False))
@@ -30,11 +31,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    'django_cryptography',
     'graphene_django',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
+    
+    
+    'accounts',
 ]
 
 
@@ -67,26 +72,6 @@ TEMPLATES = [
     },
 ]
 
-# 
-CORS_ALLOWED_ORIGINS = [
-    # "http://localhost:3000",
-]
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-        'rest_framework.parsers.MultiPartParser',
-    ],
-}
-
-
 WSGI_APPLICATION = 'silicon.wsgi.application'
 
 
@@ -108,7 +93,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -119,6 +103,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
 
@@ -129,7 +114,93 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "plugins/assets"
 MEDIA_ROOT = BASE_DIR / "media_cdn"
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL     = "accounts.User"
+CRYPTOGRAPHY_SALT   = SECRET_KEY
+
+# 
+CORS_ALLOWED_ORIGINS = [
+    # "http://localhost:3000",
+]
+CORS_ALLOW_ALL_ORIGINS: True
+
+CORS_ALLOW_METHODS = (
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",    
+)
+
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+}
+
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    
+    'USER_ID_FIELD': 'user_id',
+    
+    "UPDATE_LAST_LOGIN": True,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+
+    "JTI_CLAIM": "jti",
+    
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+}
+
+DJOSER = {
+    "USER_CREATE_PASSWORD_RETYPE"           : True,
+    "USERNAME_CHANGED_EMAIL_CONFIRMATION"   : True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION"   : True,
+    "SEND_CONFIRMATION_EMAIL"               : True,
+    "SET_USERNAME_RETYPE"                   : True,
+    "SET_PASSWORD_RETYPE"                   : True,
+    "SEND_ACTIVATION_EMAIL"                 : True,
+
+    "LOGIN_FIELD"                           : "email",
+    "PASSWORD_RESET_CONFIRM_URL"            : "password/reset/confirm/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL"            : "email/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL"                        : "activate/{uid}/{token}",
+    
+    "SERIALIZERS": {
+        'user_create'   : 'accounts.api.serializers.UserRegistrationSerializer',
+        'user'          : 'accounts.api.serializers.UserProfileSerializer',
+        'user_delete'   : 'djoser.serializers.UserDeleteSerializer',
+    },
+}

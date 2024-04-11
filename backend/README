@@ -1,1 +1,228 @@
 <!-- Backend Directory -->
+
+
+## Response Data from Get Person
+response_data = {
+    "id": "3a7c09328cb211ee9eff0edcd86e5ab3",
+    "name_first": "John",
+    "name_last": "Derrick",
+    "name_other": "Doe",
+    "email": "john.doe@hello.io",
+    "phone": "+14010959085",
+    "dob": "1904-01-25T00:00:00Z",
+    
+    "id_level": "primary",
+    "id_type": "passport",
+    "id_number": "B00192849",
+    "id_country": "NG",
+    "id_upload": "https://i.pravatar.cc/300",
+    "id_upload_type": "document",
+    
+    "bank_id_number": "00000000000",
+    "bank_id_type": "bvn",
+    
+    "address_line1": "1, Test Street",
+    "address_city": "Test City",
+    "address_state": "Test State",
+    "address_country": "NG",
+    
+    "status": "active",
+    "kyc_status": "verified",
+    "kyc_level": "basic",
+    "is_deleted": false,
+}
+
+import requests
+
+url = "https://api.useoval.com/bank_account"
+
+Naria_payload = {
+    "person_id": "8c08a008f46111eeb8d20edcd86e5ab3",
+    "type": "personal_checking",
+    "currency": "NGN",
+    "label": "Test"
+    "autosweep_enabled": False,
+}
+
+USD_Account_Creation_payload = {
+    "person_id": "3a7c09328cb211ee9eff0edcd86e5ab3",
+    "type": "personal_checking",
+    "currency": "USD",
+    "label": "Test Account"
+    "autosweep_enabled": False,
+}
+Account_Creation_Response = {
+  "data": {
+    "id": "95e2a1a1f45f11eeb8d20edcd86e5ab3",
+    "holder_id": "3a7c09328cb211ee9eff0edcd86e5ab3",
+    "holder_type": "person",
+    "label": "Test Account",
+    "account_name": null,
+    "account_number": null,
+    "routing_number": null,
+    "iban": null,
+    "swift_code": null,
+    "check_number": null,
+    "bank_name": null,
+    "bank_code": null,
+    "bank_address": {},
+    "currency": "USD",
+    "currency_settlement": "USD",
+    "balance": 0,
+    "credit_pending": 0,
+    "debit_pending": 0,
+    "block_expiry": null,
+    "autosweep_enabled": false,
+    "type": "personal_checking",
+    "kind": "standard",
+    "status": "pending",
+    "is_deleted": false,
+    "created_at": "2024-04-06T21:49:46Z",
+    "updated_at": "2024-04-06T21:49:46Z"
+  },
+  "message": "Bank account creation processing",
+  "meta": null,
+  "status": "success"
+}
+
+
+Upgrade_KYC = """
+    import requests
+    url = "https://api.useoval.com/person/8c08a008f46111eeb8d20edcd86e5ab3/kyc"
+    payload = {
+        "id_type": "nin",
+        "id_country": "NG",
+        "id_number": "00000000000",
+        "id_upload": "https://i.pravatar.cc/300"
+    }
+"""
+
+Get_Account_Response = {
+  "data": {
+    "id": "95e2a1a1f45f11eeb8d20edcd86e5ab3",
+    "holder_id": "3a7c09328cb211ee9eff0edcd86e5ab3",
+    "holder_type": "person",
+    "label": "Test Account",
+    "account_name": "JOHN DERRICK",
+    "account_number": "9504909821976800",
+    "routing_number": "021214189",
+    "iban": null,
+    "swift_code": null,
+    "check_number": null,
+    "bank_name": "OVAL BANC",
+    "bank_code": null,
+    "bank_address": {
+      "city": "Memphis",
+      "country": "US",
+      "line1": "6070 Poplar Ave",
+      "line2": "Suite 200",
+      "postal_code": "38119",
+      "state": "TN"
+    },
+    "currency": "USD",
+    "currency_settlement": "USD",
+    "balance": 400,
+    "credit_pending": 0,
+    "debit_pending": 0,
+    "block_expiry": null,
+    "autosweep_enabled": false,
+    "type": "personal_checking",
+    "kind": "standard",
+    "status": "active",
+    "is_deleted": false,
+    "created_at": "2024-04-06T21:49:46Z",
+    "updated_at": "2024-04-06T21:55:05Z"
+  },
+  "message": "Bank account retrieved successfully",
+  "meta": null,
+  "status": "success"
+}
+
+
+Mock_Deposit = """
+    import requests
+    url = "https://api.useoval.com/deposit/mock"
+    payload = {
+        "account_id": "95e2a1a1f45f11eeb8d20edcd86e5ab3",
+        "description": "Payment",
+        "sender_name": "Igwesi",
+        "amount": 150000
+    }
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "Authorization": "Bearer test_sk_m5MEkswhwQc1iuu7ChnA"
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    print(response.text)
+
+    Response = {
+        "data": null,
+        "message": "Deposit on account mocked successfully",
+        "meta": null,
+        "status": "success"
+    }
+"""
+
+Person_Creation = """
+    import requests
+    url = "https://api.useoval.com/person"
+    payload = {
+        "id_level": "primary",
+        "id_type": "nin",
+        "kyc_level": "preliminary",
+        "name_first": "Emmanuel",
+        "name_last": "Igwesi",
+        "phone": "2348073824876",
+        "email": "emmaigwesi@gmail.com",
+        "dob": "1989-01-16",
+        "id_number": "98374273242",
+        "id_upload": "https://res.cloudinary.com/rapidpay-africa/image/upload/v1682887473/sandbox/DRIVERS_LICENSE_dpf491.png",
+        "id_country": "NG",
+        "bank_id_number": "67283476223",
+        "address_line1": "34 Marka Close",
+        "address_city": "Sasche",
+        "address_state": "Texas",
+        "address_country": "US"
+    }
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "Authorization": "Bearer test_sk_m5MEkswhwQc1iuu7ChnA"
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    print(response.text)
+
+    Response = {
+        "data": {
+            "id": "8c08a008f46111eeb8d20edcd86e5ab3",
+            "name_first": "emmanuel",
+            "name_last": "igwesi",
+            "name_other": "",
+            "email": "emmaigwesi@gmail.com",
+            "phone": "2348073824876",
+            "dob": "1989-01-16T00:00:00Z",
+            "id_level": null,
+            "id_type": null,
+            "id_number": null,
+            "id_country": "NG",
+            "id_upload": null,
+            "id_upload_type": "document",
+            "bank_id_number": "67283476223",
+            "bank_id_type": "bvn",
+            "address_line1": "34 Marka Close",
+            "address_city": "Sasche",
+            "address_state": "Texas",
+            "address_country": "US",
+            "status": "active",
+            "kyc_status": "verified",
+            "kyc_level": "preliminary",
+            "is_deleted": false,
+            "created_at": "2024-04-06T22:03:49Z",
+            "updated_at": "2024-04-06T22:03:49Z"
+        },
+        "message": "Person created successfully",
+        "meta": null,
+        "status": "success"
+    }
+"""
