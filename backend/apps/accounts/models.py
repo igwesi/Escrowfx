@@ -11,12 +11,11 @@ from django_cryptography.fields import encrypt
 
 
 COUNTRY = (
+    ("AU", "Australia"),
+    ("CA", "Canada"),
+    ("GH", "Ghana"),
     ("NG", "Nigeria"),
-    ('US', 'United States'),
-    ('GH', 'Ghana'),
-    ('AU', 'Australia'),
-    ('CA', 'Canada'),
-    ("GH", "Ghana")
+    ("US", "United States"),    
 )
 
 class UserManager(BaseUserManager):

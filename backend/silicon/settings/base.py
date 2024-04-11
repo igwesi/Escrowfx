@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'djoser',
     
     
-    'accounts',
+    'apps.accounts',
+    'apps.Finance',
 ]
 
 
@@ -199,8 +200,8 @@ DJOSER = {
     "ACTIVATION_URL"                        : "activate/{uid}/{token}",
     
     "SERIALIZERS": {
-        'user_create'   : 'accounts.api.serializers.UserRegistrationSerializer',
-        'user'          : 'accounts.api.serializers.UserProfileSerializer',
+        'user_create'   : 'apps.accounts.api.serializers.UserRegistrationSerializer',
+        'user'          : 'apps.accounts.api.serializers.UserProfileSerializer',
         'user_delete'   : 'djoser.serializers.UserDeleteSerializer',
     },
 }

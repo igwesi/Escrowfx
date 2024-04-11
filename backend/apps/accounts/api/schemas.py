@@ -11,6 +11,7 @@ class AccountType(DjangoObjectType):
             "user_id",
             "person_id",
             "business_id",
+            
             "email",
             "username",
             "first_name",
