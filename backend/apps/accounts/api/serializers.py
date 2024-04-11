@@ -1,13 +1,15 @@
-from accounts.models import User
-from  accounts.api.utils import Utils
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from django.utils import encoding
 from django.utils import http
+from django.utils import encoding
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth import authenticate, login
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import CommonPasswordValidator
+from apps.accounts.api.utils import Utils
 
+
+User = get_user_model()
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
