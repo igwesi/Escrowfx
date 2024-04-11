@@ -4,7 +4,7 @@ from apps.accounts.models import User
 
 
 class Chat(models.Model):
-	chat_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+	chat_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
 	user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user1')
 	user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user2')
 	read = models.BooleanField(default=False)
