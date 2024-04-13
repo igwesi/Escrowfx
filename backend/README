@@ -1,5 +1,17 @@
 <!-- Backend Directory -->
 
+phone
+
+KYC
+id_type passport, driver_license, nin, and voters_card
+id_number: (Passport, SSN, Drivers License, NIN, or Voters Card)
+id_country: NG
+id_upload:
+bank_id_number #BVN for Nigerian ID holders
+address_line
+city
+state
+country
 
 ## Response Data from Get Person
 response_data = {
