@@ -47,7 +47,6 @@ class Query(graphene.ObjectType):
             return None
 
 
-
 class CreateAccountType(DjangoObjectType):
     class Meta:
         model = User
@@ -86,7 +85,7 @@ class CreateUser(graphene.Mutation):
         state           = graphene.String()
         zip_code        = graphene.Int()
         country         = graphene.String()
-    
+        
     account = graphene.Field(CreateAccountType)
     
     @staticmethod

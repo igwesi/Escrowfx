@@ -83,8 +83,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     USERNAME_FIELD  = 'email'
     EMAIL_FIELD     = 'email'
+    USER_ID_FIELD   = 'user_id'
     REQUIRED_FIELDS = ['username','tel']
-    
     
     # Objects used for creating a user
     objects = UserManager()
