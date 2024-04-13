@@ -94,7 +94,7 @@ class GetOrCreateChat(APIView):
 		try:
 			if serializer.is_valid():
 				user1 = request.user
-				user2 = User.objects.get(id=user2)
+				user2 = User.objects.get(user_id=user2)
 				chat1 = Chat.objects.filter(user1=user1, user2=user2).first()
 				chat2 = Chat.objects.filter(user1=user2, user2=user1).first()
 				if chat1 or chat2:
@@ -176,8 +176,8 @@ class MessageAPIView(APIView):
 
 	def get(self, request, *args, **kwargs):
 		try:
-			chat_id = kwargs.get('chat_id')
-			chat = Chat.objects.filter(id=chat_id).select_related(
+			chat_id = request.data.get("chat")
+			chat = Chat.objects.filter(chat_id=chat_id).select_related(
 				'user1', 'user2').first()
 			if not chat:
 				raise NotFound("Chat not found.")
@@ -186,6 +186,13 @@ class MessageAPIView(APIView):
 			if not messages.exists():
 				raise NotFound("No messages found for the chat.")
 			serializer = MessageSerializer(messages, many=True)
+
+			# Mark chat as read if the logged-in user is not the sender of the last message
+			last_message = messages.last()  # Get the latest message in the chat
+			print(last_message)
+			if last_message.sender != request.user:
+				chat.read = True
+				chat.save()
 			return Response({
 				"statusCode": status.HTTP_200_OK,
 				"message": "Successfully.",
@@ -213,14 +220,16 @@ class MessageAPIView(APIView):
 		try:
 			if serializer.is_valid():
 				try:
-					chat = Chat.objects.get(id=chat_id)
+					chat = Chat.objects.get(chat_id=chat_id)
 				except Chat.DoesNotExist:
 					return Response({
 						"statusCode": status.HTTP_404_NOT_FOUND,
 						"message": "Chat not found.",
 					}, status=status.HTTP_404_NOT_FOUND)
 				message = Message.objects.create(
-					chat=chat, sender=request.user, msg=serializer.validated_data.get('message'))
+					chat=chat, sender=request.user, msg=serializer.validated_data.get('msg'))
+				chat.read = False
+				chat.save()
 				return Response({
 					"statusCode": status.HTTP_201_CREATED,
 					"message": "Successfully.",
