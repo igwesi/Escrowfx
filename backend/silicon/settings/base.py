@@ -21,28 +21,30 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    'django_cryptography',
-    'graphene_django',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'corsheaders',
+]
+THIRD_PARTY_APPS = [
     'djoser',
-    
-    
+    'corsheaders',
+    'rest_framework',
+    'graphene_django',
+    'phonenumber_field',   
+    'django_cryptography',    
+    'rest_framework.authtoken',
+]
+PROJECT_APPS = [
     'apps.accounts',
     'apps.Finance',
 ]
 
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,10 +77,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'silicon.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -96,7 +96,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Africa/Lagos'
 USE_I18N = True
@@ -105,15 +104,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-MEDIA_URL = 'media/'
+STATIC_URL  = 'static/'
+MEDIA_URL   = 'media/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'plugins/static')
 ]
-
 STATIC_ROOT = BASE_DIR / "plugins/assets"
-MEDIA_ROOT = BASE_DIR / "media_cdn"
+MEDIA_ROOT  = BASE_DIR / "media_cdn"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -127,16 +125,14 @@ CORS_ALLOWED_ORIGINS = [
     # "http://localhost:3000",
 ]
 CORS_ALLOW_ALL_ORIGINS: True
-
 CORS_ALLOW_METHODS = (
     "GET",
     "POST",
     "PUT",
     "PATCH",
     "DELETE",
-    "OPTIONS",    
+    "OPTIONS",
 )
-
 CORS_ALLOW_HEADERS = (
     "accept",
     "authorization",
@@ -162,13 +158,12 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
-
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     
     'USER_ID_FIELD': 'user_id',
-    
+        
     "UPDATE_LAST_LOGIN": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
@@ -195,6 +190,7 @@ DJOSER = {
     "SEND_ACTIVATION_EMAIL"                 : True,
 
     "LOGIN_FIELD"                           : "email",
+    "USER_ID_FIELD"                         : "user_id,",
     "PASSWORD_RESET_CONFIRM_URL"            : "password/reset/confirm/{uid}/{token}",
     "USERNAME_RESET_CONFIRM_URL"            : "email/reset/confirm/{uid}/{token}",
     "ACTIVATION_URL"                        : "activate/{uid}/{token}",
@@ -205,3 +201,6 @@ DJOSER = {
         'user_delete'   : 'djoser.serializers.UserDeleteSerializer',
     },
 }
+
+GRAPH_API_URL    = env('GRAPH_API_URL')
+GRAPH_ACCESS_KEY = env('GRAPH_ACCESS_KEY')
