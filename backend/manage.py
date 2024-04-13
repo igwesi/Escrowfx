@@ -2,11 +2,23 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+import environ
+from pathlib import Path
+
+
+env = environ.Env(DEBUG=(bool, False))
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent
+
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+environment = env('ENVIRONMENT')
 
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'silicon.settings.development')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'silicon.settings.' + environment)
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

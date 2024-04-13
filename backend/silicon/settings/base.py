@@ -16,9 +16,6 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
-
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -42,6 +39,7 @@ THIRD_PARTY_APPS = [
 PROJECT_APPS = [
     'apps.accounts',
     'apps.Finance',
+    'apps.chat',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
