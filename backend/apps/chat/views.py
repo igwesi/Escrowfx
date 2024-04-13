@@ -177,7 +177,7 @@ class MessageAPIView(APIView):
 	def get(self, request, *args, **kwargs):
 		try:
 			chat_id = kwargs.get('chat_id')
-			chat = Chat.objects.filter(id=chat_id).select_related(
+			chat = Chat.objects.filter(chat_id=chat_id).select_related(
 				'user1', 'user2').first()
 			if not chat:
 				raise NotFound("Chat not found.")
@@ -213,7 +213,7 @@ class MessageAPIView(APIView):
 		try:
 			if serializer.is_valid():
 				try:
-					chat = Chat.objects.get(id=chat_id)
+					chat = Chat.objects.get(chat_id=chat_id)
 				except Chat.DoesNotExist:
 					return Response({
 						"statusCode": status.HTTP_404_NOT_FOUND,
