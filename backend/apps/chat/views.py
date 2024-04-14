@@ -139,7 +139,7 @@ class ChatByIDView(APIView):
 	def get(self, request, *args, **kwargs):
 		try:
 			chat_id = kwargs.get('chat_id')
-			chat = Chat.objects.filter(id=chat_id).select_related(
+			chat = Chat.objects.filter(chat_id=chat_id).select_related(
 				'user1', 'user2').first()
 			if not chat:
 				raise NotFound("Chat not found.")
