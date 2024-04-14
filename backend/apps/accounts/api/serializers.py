@@ -18,7 +18,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         """ Specify the model and fields to be serialized """
         model = User
-        fields = ['email', 'username', 'tel', 'first_name', 'last_name', 'business_name', 'password', 'password2']
+        fields = [
+            'email', 
+            'username', 
+            'tel', 
+            'first_name', 
+            'last_name', 
+            'business_name', 
+            'password', 
+            'password2'
+        ]
+        
         """ Additional validation for unique fields """
         extra_kwargs = {
             'email': {'validators': [UniqueValidator(queryset=User.objects.all(), message="User with email already exist")]},
@@ -74,11 +84,18 @@ class UserLoginSerializer(serializers.ModelSerializer):
         """ Check if both email and password are provided """
         if email and password:
             """ Attempt to authenticate the user with the provided email and password """
-            user = authenticate(request=self.context.get('request'), email=email, password=password)
+            user = authenticate(
+                request=self.context.get('request'), 
+                email=email, 
+                password=password
+            )
             
             """ If authentication fails, raise a validation error """
             if not user:
-                raise serializers.ValidationError("Incorrect Credentials", code='authorization')
+                raise serializers.ValidationError(
+                    "Incorrect Credentials",
+                    code='authorization'
+                )
             
             """ Prepare email data for successful login """
             data = {
@@ -151,8 +168,14 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
 
 
 class UserChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(max_length=255, style={'input_type': 'password'}, write_only=True)
-    new_password = serializers.CharField(max_length=255, style={'input_type': 'password'}, write_only=True)
+    old_password = serializers.CharField(
+        max_length=255, style={'input_type': 'password'},
+        write_only=True
+    )
+    new_password = serializers.CharField(
+        max_length=255, style={'input_type': 'password'},
+        write_only=True
+    )
     confirm_new_password = serializers.CharField(
         max_length=255, 
         style={'input_type': 'password'}, 
@@ -215,9 +238,14 @@ class UserPasswordResetSerializer(serializers.Serializer):
     This serializer validates the new password and confirm password fields, checks the token's validity,
     and updates the user's password if the token is valid.
     """
-    new_password            = serializers.CharField(max_length=255,style={'input-type':'password'},write_only=True)
-    confirm_new_password    = serializers.CharField(max_length=255,style={'input-type':'password'},write_only=True)
-    
+    new_password        = serializers.CharField(
+        max_length=255,style={'input-type':'password'},
+        write_only=True
+    )
+    confirm_new_password = serializers.CharField(
+        max_length=255,style={'input-type':'password'},
+        write_only=True
+    )
     class Meta:
         fields=['new_password','confirm_new_password']
     
