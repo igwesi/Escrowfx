@@ -99,7 +99,6 @@ class UserLoginView(APIView):
             
             if user is not None:
                 token = get_tokens_for_user(user)
-                
                 return Response({
                     'token'         : token,
                     'email'         : user.email,
@@ -175,7 +174,7 @@ class SendPasswordResetEmailView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None):
-        serializer = SendPasswordResetEmailSerializer(data=request.data)
+        serializer = SendPasswordResetEmailSerializer(data=request.data, context={'request': request})
 
         if serializer.is_valid(raise_exception=True):
             return Response(

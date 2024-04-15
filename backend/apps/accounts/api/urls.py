@@ -5,7 +5,6 @@ from .schemas import schema
 
 urlpatterns = [
     path("", GraphQLView.as_view(graphiql=True, schema=schema)),
-    
     path('login/', UserLoginView.as_view(), name='login'),
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('register/', UserRegistrationView.as_view(), name='register'),    
