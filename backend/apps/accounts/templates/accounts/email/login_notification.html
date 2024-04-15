@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Login Notification</title>
-</head>
-<body>
-    <h1>Hi, {{ user.first_name }}!</h1>
-    <p>You have successfully logged in to our platform using {{ user.email }} </p>
-    <p>If you did not initiate this login, please sign in to your Silicon account to change your password and contact our support team immediately.</p>
-    <p>Thank you for using our services.</p>
-</body>
+    <head>
+        <title>Login Notification</title>
+        <style>
+            
+        </style>
+    </head>
+    <body class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="card py-4">
+                    <h1>Hi, {{ user.first_name }}!</h1>
+                    <p>You have successfully logged in to our platform using {{ user.email }} </p>
+                    <p>If you did not initiate this login, please sign in to your Silicon account to change your password and contact our support team immediately.</p>
+                    <p>Thank you for using our services.</p>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>

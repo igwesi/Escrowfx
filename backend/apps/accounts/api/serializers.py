@@ -239,7 +239,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             'subject'    : 'Request to Reset Your Password',
             'body'       : 'Follow the link below to reset Your Password',
             'template'   : 'accounts/email/reset_password_notification.html',
-            'context'    : {'user':user, 'link':link}                
+            'context'    : {'user':user, 'link':link, 'site_name':'Silicon'}                
         }
         """Send the password reset email"""
         Utils.send_mail_threaded(emaIl_data)
