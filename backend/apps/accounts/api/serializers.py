@@ -25,7 +25,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'tel', 
             'first_name', 
             'last_name', 
-            'business_name', 
             'password', 
             'password2'
         ]
@@ -40,10 +39,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 UniqueValidator(
                     queryset=User.objects.all(), 
                     message="User must provide a unique username")]},
-            'business_name': {'validators': [
-                UniqueValidator(
-                    queryset=User.objects.all(), 
-                    message="Business name already registered")]},
             'tel': {'validators': [
                 UniqueValidator(
                     queryset=User.objects.all(),
@@ -69,7 +64,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """ Set additional user fields """
         user.first_name      = validated_data['first_name']
         user.last_name       = validated_data['last_name']
-        user.business_name   = validated_data['business_name']
         user.save()
         
         """" Return User Object"""
@@ -122,6 +116,11 @@ class UserLoginSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Both fields are required", code='authorization')
         return attrs
     
+class UserKYCSerializer(serializers.ModelField):
+    
+    class Meta:
+        model = User
+        fields = ['business_name', 'role', 'address_line','city','state','zip_code', 'country']
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:

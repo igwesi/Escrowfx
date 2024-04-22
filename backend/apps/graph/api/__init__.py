@@ -156,13 +156,24 @@ class Bank(BaseClass):
     
     
     def create_payout_destination(self, data):
-        pass
+        path ="/payout-destination"
+        response = self.make_request("POST", path, json=data)
+        return self.result_format(response)
     
     def get_payout_destination(self, data):
-        pass
+        path = "/payout-destination/{}".format(data['destination_id'])
+        response = self.make_request("GET", path)
+        return self.result_format(response)
     
     def list_payout_destination(self, data):
-        pass
+        path = "/payout-destination"
+        response = self.make_request("GET", path)
+        if 'page' in data and 'pageSize' in data:
+            path = "/payout-destination?page={}&per_page={}".format(
+                data['page'], data['pageSize']
+            )
+            response = self.make_request("GET", path)
+        return self.result_format(response)
     
     def create_payout(self, data):
         path = "/payout"

@@ -1,8 +1,13 @@
-from django.shortcuts import render
-from django.http import JsonResponse
+import json
 from . import api
 from .api import Bank
 from .utils import load_lib
+
+from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+
 
 GraphAPI = load_lib()
 graph_instance = GraphAPI()
@@ -17,8 +22,6 @@ def graph(request):
         "usd_ngn" : rates[2]['USD-NGN']
     }
     return JsonResponse(data, safe=False)
-
-
 
 
 class Person():
@@ -43,6 +46,23 @@ class Person():
     def upgrade_kyc(person_id, data):
         person = graph_instance.upgrade_kyc(person_id, data)
         return person
+
+
+class Business():
+    def __init__(self):
+        self.business = Business()
+    
+    def create_business(data):
+        business = graph_instance.create_business(data)
+        return business
+    
+    def get_business(business_id):
+        business = graph_instance.business(business_id)
+        return business
+    
+    def list_businesses(data):
+        businesses = graph_instance.list_businesses(data)
+        return businesses
 
 
 class Bank():
@@ -116,3 +136,15 @@ class Bank():
     def list_accounts(data):
         accounts = graph_instance.list_accounts(data)
         return accounts
+    
+    
+
+
+
+
+
+@csrf_exempt
+@require_POST
+def webhook_view(request):
+    data = json.loads(request.body)
+    return HttpResponse(status=200)

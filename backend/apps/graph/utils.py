@@ -150,7 +150,6 @@ class GraphAPI(object):
     def verify_payment(self, code, **kwargs):
         return ""
     
-    
     # WALLET OPERATION
     def create_wallet(self, data):
         return self.wallet_api.create_wallet(data)
@@ -160,7 +159,6 @@ class GraphAPI(object):
     
     def list_wallets(self, data):
         return self.wallet_api.list_wallets(data)
-    
     
     # USDT OPERATION
     def create_usdt_address(self, data):
@@ -188,10 +186,6 @@ def generate_digest(data):
         settings.GRAPH_ACCESS_KEY.encode("utf-8"),
         msg = data,
         digestmod = hashlib.sha512).hexdigest()
-    
-
-def get_js_script():
-    return ""
 
 
 class MockRequest(object):

@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
 from django.contrib.auth import get_user_model
+from ..models import BankAccount
 from apps.graph.views import Bank, Person
-
 User = get_user_model()
 
 class DashboardView(APIView):
@@ -15,9 +15,9 @@ class DashboardView(APIView):
         except User.DoesNotExist:
             return Response({"status": status.HTTP_404_NOT_FOUND, "msg": "User Not Found"}, status=status.HTTP_404_NOT_FOUND)
         
-        account_info = Bank.account_info("95e2a1a1f45f11eeb8d20edcd86e5ab3")
-        graph_person = Person.get_person("3a7c09328cb211ee9eff0edcd86e5ab3")
-        
+        bank_instance, created = Bank.objects.get_or_create(owner=user)
+        account_info = Bank.account_info(bank_instance.usd_id) # "95e2a1a1f45f11eeb8d20edcd86e5ab3"
+        graph_person = Person.get_person(user.person_id) # "3a7c09328cb211ee9eff0edcd86e5ab3"
         data = [
             graph_person,
             account_info
@@ -38,3 +38,10 @@ class CurrencyRate(APIView):
                 }
         return Response({"status": status.HTTP_200_OK, "data":data,  "msg": "Successful"}, status=status.HTTP_200_OK)
     
+    
+class ListBank(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        data = Bank.list_banks()
+        return Response({"status": status.HTTP_200_OK, "data":data,  "msg": "Successful"}, status=status.HTTP_200_OK)

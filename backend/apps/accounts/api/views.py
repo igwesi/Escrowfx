@@ -1,4 +1,5 @@
 from rest_framework import status
+from django import db
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,8 +7,9 @@ from rest_framework import permissions, status
 from django.contrib.auth import authenticate, login
 from .renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from apps.graph.views import Person, Business
 from .serializers import (
+    User,
     UserLoginSerializer,
     UserProfileSerializer,
     UpdateProfileSerializer,
@@ -114,6 +116,87 @@ class UserLoginView(APIView):
             )
         return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
 
+
+class UserKYC(APIView):
+    renderer_classes = [UserRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, format=None):
+        serializer = UserProfileSerializer(request.user)
+        return Response({"user": serializer.data}, status=status.HTTP_200_OK)
+    
+    def post(self, request, format=None):
+        user            = request.user
+        data            = request.data
+        
+        person_payload = {
+            'name_first'        : user.first_name,
+            'name_last'         : user.last_name,
+            'phone'             : user.get_tel(),
+            'email'             : user.email,
+            'dob'               : user.get_dob(),
+            
+            'id_type'           : data['id_type'],
+            'id_number'         : data['id_number'],
+            'id_country'        : data['id_country'],
+            
+            'address_line1'     : data['address_line'],
+            'address_city'      : data['address_city'],
+            'address_state'     : data['address_state'],
+            'address_country'   : data['address_country'],
+        }
+        if data['id_upload']:
+            person_payload['id_upload'] = data['id_upload']
+        if data['bvn']:
+            person_payload['bank_id_number'] = data['bvn']
+        
+        user_instance               = User.objects.get(email=user.email)
+        user_instance.role          = data['role']
+        user_instance.business_name = data['company_name']
+        user_instance.address_line  = data['address_line']
+        user_instance.city          = data['address_city']
+        user_instance.state         = data['address_state']
+        user_instance.country       = data['address_country']
+        user_instance.zip_code      = data['address_zip']       
+        user_instance.save()
+        
+        # try:
+        #     person_response             = Person.create_person(person_payload)
+        #     print(person_response)
+        #     user_instance.person_id     = person_response[2]['id']
+        #     user_instance.save()
+        # except Exception as e:
+        #     print(e)
+            
+        # try:
+        #     dof             = data['dof'] 
+        #     ein             = data['company_ein']
+        #     industry        = data['industry']
+        #     business_type   = data['business_type']
+        #     business_payload = {
+        #         'owner_id'          : user_instance.person_id,
+        #         'name'              : user_instance.business_name,
+        #         'business_type'     : business_type,
+        #         'industry'          : industry,
+        #         'id_type'           : 'ein',
+        #         'id_number'         : ein,
+                
+        #         'address_line1'     : user_instance.address_line,
+        #         'address_city'      : user_instance.city,
+        #         'address_state'     : user_instance.state,
+        #         'address_country'   : user_instance.country,
+        #         'address_zip'       : user_instance.zip_code,
+        #         'dof'               : dof
+        #     }
+        #     print(business_payload)
+        #     business_response = Business.create_business(business_payload)
+        # except Exception as e:
+        #     print(e)
+        
+        return Response(
+            {"status_code":status.HTTP_200_OK, "msg":"KYC has been submitted Successfully"}, 
+            status=status.HTTP_200_OK
+        )
 
 
 class UserProfileView(APIView):
