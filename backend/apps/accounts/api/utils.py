@@ -1,19 +1,26 @@
 import os
 import threading
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.template.loader import get_template
 
 
 class Utils:
     @staticmethod
     def send_mail(data):
-        email = EmailMessage(
+        user = data['user']
+        email = EmailMultiAlternatives(
             subject     = data['subject'],
             body        = data['body'],
             from_email  = settings.EMAIL_HOST_USER,
-            to          = [data['to_email']]
+            to          = [user.email]
         )
-        email.send()
+        if data['template']:
+            template = get_template(data['template'])
+            html_content = template.render(data.get('context', {}))
+            email.attach_alternative(html_content, "text/html")
+            
+        email.send(fail_silently=True)
 
     @staticmethod
     def send_mail_threaded(data):

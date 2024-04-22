@@ -57,12 +57,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     first_name      = models.CharField(max_length=50)
     last_name       = models.CharField(max_length=50)
-    business_name   = models.CharField(max_length=50)
-    role            = models.CharField(max_length=50, help_text="CEO, CFO")
-    username        = models.CharField(unique=True, max_length=50,)
     email           = models.EmailField(unique=True)
+    username        = models.CharField(unique=True, max_length=50)
     tel             = PhoneNumberField()
     dob             = models.DateField(verbose_name="Date of Birth", default='1900-01-01')    
+    
+    business_name   = models.CharField(max_length=50, blank=True)
+    role            = models.CharField(max_length=50, help_text="CEO, CFO", blank=True)    
     
     # User's Address Section: All Fields are Required
     zip_code        = models.IntegerField(verbose_name="Zip Code", null=True)
@@ -70,6 +71,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     city            = models.CharField(max_length=50, verbose_name="Address City")
     state           = models.CharField(max_length=50, verbose_name="Address State")
     country         = models.CharField(max_length=50, verbose_name="Country Codes e.g US, NG", choices=COUNTRY)
+    
+    # kyc_status      = models.CharField(max_length=20, choices=(
+    #     ("Pending", "Pending"),
+    #     ("submitted", "submitted"),
+    #     ("Approved", "Approved"),
+    #     ("Rejected", "Rejected")),
+    #     default="Pending"
+    # )
     
     # User's Permissions Section
     is_active       = models.BooleanField(default=True)
@@ -101,6 +110,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return str(self.user_id)
     
+    def get_dob(self):
+        dob = self.dob.strftime("%Y-%m-%d")
+        return dob
+    
+    def get_tel(self):
+        phone = str(self.tel.raw_input).replace('+','')
+        return phone
     def has_perm(self, perm, obj=None):
         return True    
 

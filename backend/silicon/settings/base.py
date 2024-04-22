@@ -16,7 +16,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 DJANGO_APPS = [
@@ -35,6 +35,12 @@ THIRD_PARTY_APPS = [
     'phonenumber_field',   
     'django_cryptography',    
     'rest_framework.authtoken',
+    
+    'health_check',
+    'health_check.db',
+    'health_check.cache',
+    'health_check.storage',
+    'health_check.contrib.migrations',
 ]
 PROJECT_APPS = [
     'apps.accounts',
@@ -109,7 +115,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'plugins/static')
 ]
 STATIC_ROOT = BASE_DIR / "plugins/assets"
-MEDIA_ROOT  = BASE_DIR / "media_cdn"
+MEDIA_ROOT  = BASE_DIR / "plugins/media_cdn"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -202,3 +208,4 @@ DJOSER = {
 
 GRAPH_API_URL    = env('GRAPH_API_URL')
 GRAPH_ACCESS_KEY = env('GRAPH_ACCESS_KEY')
+GRAPH_WEBHOOK_DOMAIN = env('GRAPH_WEBHOOK_DOMAIN')

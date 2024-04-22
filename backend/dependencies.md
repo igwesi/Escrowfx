@@ -8,3 +8,4 @@ djoser
 graphene-django
 psycopg2-binary
 django-phonenumber-field
+django-health-check

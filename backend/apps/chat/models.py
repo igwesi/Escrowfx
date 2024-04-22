@@ -11,7 +11,7 @@ class Chat(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
-		return self.chat_id + " - " + self.user1 + " - " + self.user2
+		return str(self.chat_id) + " - " + str(self.user1) + " - " + str(self.user2)
 
 
 class Message(models.Model):
