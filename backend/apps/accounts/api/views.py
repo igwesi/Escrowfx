@@ -107,7 +107,6 @@ class UserLoginView(APIView):
                     'first_name'    : user.first_name,
                     'last_name'     : user.last_name,
                     'is_verified'   : user.is_verified,
-                    
                     'msg'       : 'Logged in Successfully!'
                 },status=status.HTTP_200_OK)
             return Response(

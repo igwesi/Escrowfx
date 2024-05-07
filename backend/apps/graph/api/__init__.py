@@ -160,8 +160,8 @@ class Bank(BaseClass):
         response = self.make_request("POST", path, json=data)
         return self.result_format(response)
     
-    def get_payout_destination(self, data):
-        path = "/payout-destination/{}".format(data['destination_id'])
+    def get_payout_destination(self, destination_id):
+        path = "/payout-destination/{}".format(destination_id)
         response = self.make_request("GET", path)
         return self.result_format(response)
     

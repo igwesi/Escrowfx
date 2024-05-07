@@ -25,6 +25,7 @@ DJANGO_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 ]
 THIRD_PARTY_APPS = [
@@ -52,8 +53,9 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -79,7 +81,9 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'silicon.wsgi.application'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -126,9 +130,12 @@ CRYPTOGRAPHY_SALT   = SECRET_KEY
 
 # 
 CORS_ALLOWED_ORIGINS = [
-    # "http://localhost:3000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
+
 CORS_ALLOW_ALL_ORIGINS: True
+
 CORS_ALLOW_METHODS = (
     "GET",
     "POST",

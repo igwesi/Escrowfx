@@ -1,13 +1,13 @@
-from django.contrib.auth import get_user_model
-from rest_framework import serializers
 from django.utils import http
 from django.utils import encoding
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from rest_framework import serializers
+from apps.accounts.api.utils import Utils
+from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login
 from rest_framework.validators import UniqueValidator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.password_validation import CommonPasswordValidator
-from apps.accounts.api.utils import Utils
 
 
 User = get_user_model()
@@ -16,6 +16,7 @@ User = get_user_model()
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """ Additional field for password confirmation """
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    
     class Meta:
         """ Specify the model and fields to be serialized """
         model = User
@@ -117,15 +118,18 @@ class UserLoginSerializer(serializers.ModelSerializer):
         return attrs
     
 class UserKYCSerializer(serializers.ModelField):
-    
     class Meta:
         model = User
         fields = ['business_name', 'role', 'address_line','city','state','zip_code', 'country']
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model  = User
         fields = [
+            "user_id",
+            "person_id",
+            "business_id",
             'email',            
             'tel',
             'username',
@@ -141,6 +145,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'zip_code',
             'country'
         ]
+        
         
 class UpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -197,6 +202,7 @@ class UserChangePasswordSerializer(serializers.Serializer):
     def validate(self, data):
         old_password = data.get('old_password')
         user         = self.context.get('user')
+        
         if not user.check_password(old_password):
             raise serializers.ValidationError("Old Password is not Correct")
         return data
