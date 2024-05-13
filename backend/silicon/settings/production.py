@@ -1,8 +1,8 @@
-from .base import *
-
+from ..settings import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+
 EMAIL_BACKEND       = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST          = "smtp.gmail.com"
 EMAIL_USE_TLS       = True
@@ -21,8 +21,9 @@ DATABASES = {
     }
 }
 
-
 RENDER_EXTERNAL_HOSTNAME = env('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, 'plugins/assets')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
